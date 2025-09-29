@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+venv/
+env/
+.idea/
+*.swp
+
+# Pydantic / FastAPI
+*.sqlite3
+*.log
+
+# Alembic
+alembic/versions/*.pyc
+
+# MySQL / Database
+mysql/
+*.sql
+*.db
+
+# Docker
+*.log
+docker-compose.override.yml
+**/Dockerfile.*
+**/docker-compose.override.yml
+
+# VSCode / IDEs
+.vscode/
+*.code-workspace
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db

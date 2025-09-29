@@ -1,0 +1,64 @@
+services:
+
+  enersee_fastapi_backend:
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      enersee_fastapi_database:
+        condition: service_healthy
+    networks:
+      - enersee-fastapi-network
+
+  enersee_fastapi_database:
+    image: mysql:8.0
+    container_name: enersee-fastapi-database
+    restart: unless-stopped
+    platform: linux/amd64
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 60s
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - enersee-fastapi-network
+
+  enersee_fastapi_phpmyadmin:
+    image: phpmyadmin
+    container_name: enersee-fastapi-phpmyadmin
+    restart: always
+    tty: true
+    depends_on:
+      enersee_fastapi_database:
+        condition: service_healthy
+    ports:
+      - "${PMA_PORT}:80"
+    environment:
+      PMA_HOST: enersee_fastapi_database
+      PMA_PORT: 3306
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 2048M
+    networks:
+      - enersee-fastapi-network
+
+networks:
+  enersee-fastapi-network:
+    driver: bridge
