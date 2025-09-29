@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from src.config.config import get_settings
 from src.config.database import init_db
+from src.core.exceptions import validation_exception_handler
 from src.routes.router import router as v1_router
 
 settings = get_settings()
@@ -22,6 +24,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Exceptions
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -38,7 +43,7 @@ async def root():
         "message": f"Welcome to {settings.APP_NAME}",
         "version": settings.APP_VERSION,
         "docs": "/docs",
-        "test" :"Yeah Sync"
+        "test": "Yeah Sync"
     }
 
 

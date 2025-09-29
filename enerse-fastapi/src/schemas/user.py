@@ -1,6 +1,6 @@
 from dataclasses import field
 
-from pydantic import BaseModel, EmailStr, Field, validator, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -33,6 +33,7 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     id: int
+    email: EmailStr
     is_active: bool
     created_at: datetime
     updated_at: Optional[datetime]
