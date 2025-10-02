@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from src.controllers.api.v1 import users
+from src.controllers.api.v1 import meters
 
 router = APIRouter()
-router.include_router(users.router, prefix="/users", tags=["users"])
+router.include_router(meters.router, prefix="/meters", tags=["meters"])

@@ -38,3 +38,7 @@ alembic current
 alembic history --verbose
 alembic heads
 ```
+### Run test 
+```bash
+pytest -v
+```

@@ -5,7 +5,6 @@ from pydantic import ConfigDict
 
 
 class Settings(BaseSettings):
-
     model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -19,6 +18,8 @@ class Settings(BaseSettings):
     DB_USER: str = Field(..., alias="DB_USERNAME")
     DB_PASSWORD: str
     DB_NAME: str = Field(..., alias="DB_DATABASE")
+    EXTERNAL_API_BASE: str = Field(..., alias="EXTERNAL_API_BASE")
+    EXTERNAL_API_KEY: str = Field(..., alias="EXTERNAL_API_KEY")
 
     # Application
     APP_NAME: str = "Enersee Application"

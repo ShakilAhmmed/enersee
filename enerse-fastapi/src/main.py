@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,9 +7,12 @@ from contextlib import asynccontextmanager
 from src.config.config import get_settings
 from src.config.database import init_db
 from src.core.exceptions import validation_exception_handler
+from src.core.logger import setup_logging
 from src.routes.router import router as v1_router
 
 settings = get_settings()
+setup_logging()
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -30,7 +35,7 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # restrict in production
+    allow_origins=["*"],  # TODO;restrict in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
